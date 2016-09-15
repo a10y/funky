@@ -15,8 +15,6 @@
  */
 package org.aduffy.kdt
 
-import java.util.*
-
 sealed class Maybe<T> : Extract<T> {
     class Some<T>(val value: T) : Maybe<T>() {
         override fun unwrap(): T = value

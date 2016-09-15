@@ -20,7 +20,6 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
-import kotlin.test.fail
 
 class TestEither {
     @Test
