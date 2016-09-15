@@ -17,20 +17,36 @@ repositories {
 
 // Apply for baselineUpdateConfig task
 apply plugin: 'com.palantir.baseline-config'
+apply plugin: 'maven'
 
-allprojects {
-    apply plugin: 'kotlin'
-    apply plugin: 'com.palantir.baseline-checkstyle'
-    apply plugin: 'com.palantir.baseline-eclipse'
-    apply plugin: 'com.palantir.baseline-findbugs'
-    apply plugin: 'com.palantir.baseline-idea'
+apply plugin: 'kotlin'
+apply plugin: 'com.palantir.baseline-checkstyle'
+apply plugin: 'com.palantir.baseline-eclipse'
+apply plugin: 'com.palantir.baseline-findbugs'
+apply plugin: 'com.palantir.baseline-idea'
 
-    dependencies {
-        compile "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}"
-        compile "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}"
+    compile "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
 
-        testCompile "junit:junit:${junitVersion}"
-        testCompile "org.jetbrains.kotlin:kotlin-test:${kotlinVersion}"
-        testCompile "org.jetbrains.kotlin:kotlin-test-junit:${kotlinVersion}"
+    testCompile "junit:junit:${junitVersion}"
+    testCompile "org.jetbrains.kotlin:kotlin-test:${kotlinVersion}"
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:${kotlinVersion}"
+}
+
+group = 'com.github.andreweduffy'
+
+// To specify a license in the pom:
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+        }
     }
 }
