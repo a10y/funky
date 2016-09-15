@@ -10,21 +10,7 @@ dependencies:
 
 test:
   override:
-    - ? |
-      ./gradlew test --info
-      :
+    - ./gradlew test --info:
         parallel: true
         timeout: 1200
-  post:
-    - ./gradlew --stacktrace --parallel copyCiArtifactsToCircle:
-        parallel: true
-      # ensure that version is not dirty
-    - |
-      if [[ -n $(git status --porcelain) ]]; then false; fi
 
-deployment:
-  release:
-    tag: /[0-9]+(\.[0-9]+)+(-[a-zA-Z]+[0-9]*)*/
-    owner: palantir
-    commands:
-      - ./gradlew bintrayUpload -x test
