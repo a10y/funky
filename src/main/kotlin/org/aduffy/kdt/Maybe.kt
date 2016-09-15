@@ -18,21 +18,26 @@ package org.aduffy.kdt
 sealed class Maybe<T> : Extract<T> {
     class Some<T>(val value: T) : Maybe<T>() {
         override fun unwrap(): T = value
-        override fun component1(): T = value
         override fun or(other: Maybe<T>): Maybe<T> = this
         override fun equals(other: Any?): Boolean = other is Some<*> && other.value == value
         override fun hashCode(): Int = value?.hashCode() ?: 0
     }
     class None<T>: Maybe<T>() {
         override fun unwrap(): T = throw IllegalStateException("Cannot extract value from None type")
-        override fun component1(): T = throw IllegalStateException("Cannot desugar None to a value")
         override fun or(other: Maybe<T>): Maybe<T> = other
         override fun equals(other: Any?): Boolean = other is None<*>
         override fun hashCode(): Int = 0
     }
 
-    abstract operator fun component1(): T
     abstract fun or(other: Maybe<T>): Maybe<T>
+
+    /**
+     * Extractor for Maybe types
+     */
+    operator fun component1(): T = when(this) {
+        is None -> throw IllegalStateException("Cannot desugar None to a value")
+        is Some -> this.value
+    }
 }
 
 /**
