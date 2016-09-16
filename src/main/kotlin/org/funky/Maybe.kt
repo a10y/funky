@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.aduffy.kdt
+
+package org.funky
 
 import java.util.*
 
@@ -34,7 +35,7 @@ sealed class Maybe<out T> : Extract<T>, Functor<T> {
      * Applies the given function to the contained value if Some, otherwise returns None
      */
     override fun <S> flatMap(f: (T) -> S): Maybe<S> = when(this) {
-        is Maybe.Some -> some(f(this.value))
+        is Some -> some(f(this.value))
         else -> none()
     }
 

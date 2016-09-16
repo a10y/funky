@@ -345,7 +345,7 @@
             <message key="ws.notPreceded" value="WhitespaceAround: ''{0}'' is not preceded with whitespace."/>
         </module>
 
-        <!-- Stricter checks begin: delete org.aduffy.kdt.some or all of the following for faster prototyping, but please restore before pushing to production. -->
+        <!-- Stricter checks begin: delete some or all of the following for faster prototyping, but please restore before pushing to production. -->
 
         <module name="AtclauseOrder"> <!-- Java Style Guide: At-clauses -->
             <property name="tagOrder" value="@param, @return, @throws, @deprecated"/>

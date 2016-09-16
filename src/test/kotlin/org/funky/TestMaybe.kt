@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.aduffy.kdt
+package org.funky
 
 import org.junit.Test
 import kotlin.test.assertEquals
