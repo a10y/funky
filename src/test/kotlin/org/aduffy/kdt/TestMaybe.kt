@@ -30,13 +30,13 @@ class TestMaybe {
     @Test
     fun testEquals() {
         // Two Nones of same type should be equal
-        assert(none<Int>().equals(none<Int>()))
+        assert(none().equals(none()))
     }
 
     @Test
     fun testDesugarNone() {
         assertFailsWith(IllegalStateException::class, "Cannot desugar None to a value", {
-            none<Int>().component1()
+            none().component1()
         })
     }
 
@@ -47,7 +47,7 @@ class TestMaybe {
 
     @Test
     fun testFirstNone() {
-        assertEquals(none<Int>(), firstSome(none(), none(), none()))
+        assertEquals(none(), firstSome(none(), none(), none()))
     }
 
     @Test
@@ -59,14 +59,14 @@ class TestMaybe {
     @Test
     fun testUnwrap() {
         assertFailsWith<IllegalStateException>("Cannot extract value from None type") {
-            none<Int>().unwrap()
+            none().unwrap()
         }
         assertEquals(10, some(10).unwrap())
     }
 
     @Test
     fun testFlatMap() {
-        assertEquals(none<Int>(), none<Int>().flatMap { it })
+        assertEquals(none(), none().flatMap { it })
         assertEquals(some(4), some(2).flatMap { it * 2 })
     }
 
@@ -77,6 +77,6 @@ class TestMaybe {
     @Test
     fun testToString() {
         assertEquals("Some(4)", some(4).toString())
-        assertEquals("None", none<Int>().toString())
+        assertEquals("None", none().toString())
     }
 }

@@ -18,9 +18,9 @@ package org.aduffy.kdt
 import java.util.*
 
 
-sealed class Maybe<T> : Extract<T>, Functor<T> {
+sealed class Maybe<out T> : Extract<T>, Functor<T> {
     class Some<T>(val value: T) : Maybe<T>()
-    class None<T> : Maybe<T>()
+    object None : Maybe<Nothing>()
 
     /**
      * Extractor for Maybe types
@@ -67,7 +67,7 @@ fun <T> some(value: T): Maybe<T> = Maybe.Some(value)
 /**
  * Creates an empty Maybe instance.
  */
-fun <T> none(): Maybe<T> = Maybe.None()
+fun none(): Maybe<Nothing> = Maybe.None
 
 /**
  * Converts a nullable type into a Maybe, mapping null -> None and non-null values to Some(value).

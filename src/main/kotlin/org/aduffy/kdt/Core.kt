@@ -32,3 +32,12 @@ interface Extract<out T> {
 interface Functor<out T> {
     fun <S> flatMap(f: (T) -> S): Functor<S>
 }
+
+/**
+ * Monoids are types that correspond to a set which contain a zero value,
+ * as well as being closed over the addition operation.
+ */
+interface Monoid<T> {
+    val zero: T // zero value for this monoid
+    fun append(other: T): T // combiner for this monoid
+}
