@@ -19,8 +19,8 @@ package org.funky
 import java.util.*
 
 
-sealed class Maybe<out T> : Extract<T>, Functor<T> {
-    class Some<T>(val value: T) : Maybe<T>()
+sealed class Maybe<out T> : Wrapped<T>, Functor<T> {
+    class Some<out T>(val value: T) : Maybe<T>()
     object None : Maybe<Nothing>()
 
     /**

@@ -17,12 +17,12 @@
 package org.funky
 
 /**
- * Extract defines a type which can be forcibly unwrapped to yield a value.
+ * Wrapped defines a type which can be forcibly unwrapped to yield a value.
  * A good example of this is wrapper types for results, ex. Either or Maybe,
  * which can either contain a value or an error indicator. This method can
  * throw at runtime if unwrapping fails.
  */
-interface Extract<out T> {
+interface Wrapped<out T> {
     fun unwrap(): T
 }
 

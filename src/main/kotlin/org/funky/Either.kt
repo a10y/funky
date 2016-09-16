@@ -18,7 +18,7 @@ package org.funky
 
 import java.util.*
 
-sealed class Either<out L, out R> : Extract<R>, Functor<R> {
+sealed class Either<out L, out R> : Wrapped<R>, Functor<R> {
     class Left<out L>(val value: L) : Either<L, Nothing>()
 
     class Right<out R>(val value: R): Either<Nothing, R>()
