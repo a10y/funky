@@ -1,4 +1,4 @@
-[![Release](https://img.shields.io/github/release/andreweduffy/funky.svg?label=jitpack)](https://jitpack.io/#andreweduffy/funky)
+[![Release](https://img.shields.io/github/release/andreweduffy/funky.svg?style=flat-square)](https://jitpack.io/#andreweduffy/funky)
 
 funky: Simple Functional Primitives for Kotlin
 ==============================================
