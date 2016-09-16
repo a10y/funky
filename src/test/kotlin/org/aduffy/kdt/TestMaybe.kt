@@ -42,12 +42,12 @@ class TestMaybe {
 
     @Test
     fun testFirstSome() {
-        assertEquals(some(10), first(none(), none(), some(10)))
+        assertEquals(some(10), firstSome(none(), none(), some(10)))
     }
 
     @Test
     fun testFirstNone() {
-        assertEquals(none<Int>(), first(none(), none(), none()))
+        assertEquals(none<Int>(), firstSome(none(), none(), none()))
     }
 
     @Test
@@ -62,5 +62,21 @@ class TestMaybe {
             none<Int>().unwrap()
         }
         assertEquals(10, some(10).unwrap())
+    }
+
+    @Test
+    fun testFlatMap() {
+        assertEquals(none<Int>(), none<Int>().flatMap { it })
+        assertEquals(some(4), some(2).flatMap { it * 2 })
+    }
+
+    @Test
+    fun testFilter() {
+    }
+
+    @Test
+    fun testToString() {
+        assertEquals("Some(4)", some(4).toString())
+        assertEquals("None", none<Int>().toString())
     }
 }

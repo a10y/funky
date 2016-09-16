@@ -16,6 +16,19 @@
 
 package org.aduffy.kdt
 
+/**
+ * Extract defines a type which can be forcibly unwrapped to yield a value.
+ * A good example of this is wrapper types for results, ex. Either or Maybe,
+ * which can either contain a value or an error indicator. This method can
+ * throw at runtime if unwrapping fails.
+ */
 interface Extract<out T> {
     fun unwrap(): T
+}
+
+/**
+ * Functor is a group of elements of type T that can be mapped over.
+ */
+interface Functor<out T> {
+    fun <S> flatMap(f: (T) -> S): Functor<S>
 }

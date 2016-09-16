@@ -15,21 +15,12 @@
  */
 package org.aduffy.kdt
 
-sealed class Maybe<T> : Extract<T> {
-    class Some<T>(val value: T) : Maybe<T>() {
-        override fun unwrap(): T = value
-        override fun or(other: Maybe<T>): Maybe<T> = this
-        override fun equals(other: Any?): Boolean = other is Some<*> && other.value == value
-        override fun hashCode(): Int = value?.hashCode() ?: 0
-    }
-    class None<T>: Maybe<T>() {
-        override fun unwrap(): T = throw IllegalStateException("Cannot extract value from None type")
-        override fun or(other: Maybe<T>): Maybe<T> = other
-        override fun equals(other: Any?): Boolean = other is None<*>
-        override fun hashCode(): Int = 0
-    }
+import java.util.*
 
-    abstract fun or(other: Maybe<T>): Maybe<T>
+
+sealed class Maybe<T> : Extract<T>, Functor<T> {
+    class Some<T>(val value: T) : Maybe<T>()
+    class None<T> : Maybe<T>()
 
     /**
      * Extractor for Maybe types
@@ -38,32 +29,62 @@ sealed class Maybe<T> : Extract<T> {
         is None -> throw IllegalStateException("Cannot desugar None to a value")
         is Some -> this.value
     }
+
+    /**
+     * Applies the given function to the contained value if Some, otherwise returns None
+     */
+    override fun <S> flatMap(f: (T) -> S): Maybe<S> = when(this) {
+        is Maybe.Some -> some(f(this.value))
+        else -> none()
+    }
+
+    override fun unwrap(): T = when(this) {
+        is Some -> this.value
+        is None -> throw IllegalStateException("Cannot extract value from None type")
+    }
+
+    override fun equals(other: Any?): Boolean = when(this) {
+        is Some -> other is Some<*> && other.value == value
+        is None -> true
+    }
+
+    override fun hashCode(): Int = when(this) {
+        is Some -> Objects.hash(value)
+        is None -> 0
+    }
+
+    override fun toString(): String = when(this) {
+        is Some -> String.format("Some(%s)", value.toString())
+        is None -> "None"
+    }
 }
 
 /**
- * Creates a org.aduffy.kdt.Maybe instance for the given value.
+ * Creates a Maybe instance holding the given value.
  */
 fun <T> some(value: T): Maybe<T> = Maybe.Some(value)
 
 /**
- * Creates a org.aduffy.kdt.Maybe instance that holds nothing.
+ * Creates an empty Maybe instance.
  */
 fun <T> none(): Maybe<T> = Maybe.None()
 
 /**
- * Converts a nullable type into a org.aduffy.kdt.Maybe, mapping null -> None and non-null values to Some(value).
+ * Converts a nullable type into a Maybe, mapping null -> None and non-null values to Some(value).
  */
 fun <T> fromNullable(value: T?): Maybe<T> = if (value === null) none() else some(value)
 
 /**
- * Finds the org.aduffy.kdt.first non-None entry, or None if they are all org.aduffy.kdt.none.
+ * Finds the first Some entry, or None if they are all None.
  */
-fun <T> first(vararg maybes: Maybe<T>): Maybe<T> {
-    val result = maybes.find {
-        when(it) {
-            is Maybe.Some -> true
-            else -> false
-        }
+fun <T> firstSome(maybes: Collection<Maybe<T>>): Maybe<T> = maybes.find {
+    when(it) {
+        is Maybe.Some -> true
+        else -> false
     }
-    return result ?: none()
-}
+} ?: none()
+
+fun <T> firstSome(vararg maybes: Maybe<T>): Maybe<T> = firstSome(maybes.asList())
+
+fun Collection<Maybe<*>>.filterSome(): List<Maybe<*>> = filter { it is Maybe.Some }
+fun Collection<Maybe<*>>.filterNone(): List<Maybe<*>> = filter { it is Maybe.None }

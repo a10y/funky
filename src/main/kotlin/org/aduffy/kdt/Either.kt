@@ -15,17 +15,41 @@
  */
 package org.aduffy.kdt
 
-sealed class Either<out L, out R> : Extract<R> {
-    class Left<L>(val value: L) : Either<L, Nothing>() {
-        override fun unwrap(): Nothing = throw IllegalStateException("Cannot extract from Left")
-        override fun equals(other: Any?): Boolean = other is Left<*> && value == other.value
-        override fun hashCode(): Int = value?.hashCode() ?: 0
+import java.util.*
+
+sealed class Either<out L, out R> : Extract<R>, Functor<R> {
+    class Left<out L>(val value: L) : Either<L, Nothing>()
+
+    class Right<out R>(val value: R): Either<Nothing, R>()
+
+    override fun unwrap(): R = when(this) {
+        is Left -> throw IllegalStateException("Cannot extract from Left")
+        is Right -> value
     }
 
-    class Right<R>(val value: R): Either<Nothing, R>() {
-        override fun unwrap(): R = value
-        override fun equals(other: Any?): Boolean = other is Right<*> && value == other.value
-        override fun hashCode(): Int = value?.hashCode() ?: 0
+    override fun <S> flatMap(f: (R) -> S): Either<L, S> = when(this) {
+        is Left -> leftOf(value)
+        is Right -> rightOf(f(value))
+    }
+
+    operator fun component1(): R = when(this) {
+        is Left -> throw IllegalStateException("Cannot desugar Left")
+        is Right -> value
+    }
+
+    override fun equals(other: Any?): Boolean = when(this) {
+        is Left -> other is Left<*> && value == other.value
+        is Right -> other is Right<*> && value == other.value
+    }
+
+    override fun hashCode(): Int = when(this) {
+        is Left -> Objects.hash(value)
+        is Right -> Objects.hash(value)
+    }
+
+    override fun toString(): String = when(this) {
+        is Left -> String.format("Left(%s)", value.toString())
+        is Right -> String.format("Right(%s)", value.toString())
     }
 }
 
@@ -44,5 +68,5 @@ fun isRight(either: Either<*, *>): Boolean = either is Either.Right<*>
 /*
  * Extension methods for Collections of Eithers.
  */
-fun Collection<Either<*, *>>.filterLeft(): List<Either<*, *>> = this.filter { it is Either.Left }
-fun Collection<Either<*, *>>.filterRight(): List<Either<*, *>> = this.filter { it is Either.Right }
+fun Collection<Either<*, *>>.filterLeft(): List<Either<*, *>> = filter { it is Either.Left }
+fun Collection<Either<*, *>>.filterRight(): List<Either<*, *>> = filter { it is Either.Right }

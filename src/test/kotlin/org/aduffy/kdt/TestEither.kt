@@ -60,4 +60,16 @@ class TestEither {
             isRight(rightOf(10))
         }
     }
+
+    @Test
+    fun testFlatMap() {
+        assertEquals(leftOf(10), leftOf(10).flatMap { it })
+        assertEquals(20, rightOf(10).flatMap { it * 2 }.unwrap())
+    }
+
+    @Test
+    fun testToString() {
+        assertEquals("Left(10)", leftOf(10).toString())
+        assertEquals("Right(kadt)", rightOf("kadt").toString())
+    }
 }
