@@ -28,7 +28,7 @@ sealed class Maybe<out T> : Wrapped<T>, Functor<T> {
      */
     operator fun component1(): T = when(this) {
         is None -> throw IllegalStateException("Cannot desugar None to a value")
-        is Some -> this.value
+        is Some -> value
     }
 
     /**
@@ -40,7 +40,7 @@ sealed class Maybe<out T> : Wrapped<T>, Functor<T> {
     }
 
     override fun unwrap(): T = when(this) {
-        is Some -> this.value
+        is Some -> value
         is None -> throw IllegalStateException("Cannot extract value from None type")
     }
 
